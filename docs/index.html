@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Clinic API — Spring Boot Masterclass</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <span class="logo-icon">⚕</span>
+    <span class="logo-text">Clinic<em>API</em></span>
+  </div>
+
+  <div class="sidebar-search">
+    <input type="text" id="searchInput" placeholder="🔍 Rechercher…" oninput="filterNav(this.value)"/>
+  </div>
+
+  <ul class="nav-list" id="navList">
+    <li class="nav-section">PROJET</li>
+    <li><a href="#home" class="nav-link active" onclick="goTo('home',this)">🏠 Vue d'ensemble</a></li>
+    <li><a href="#structure" class="nav-link" onclick="goTo('structure',this)">📁 Structure</a></li>
+    <li><a href="#pom" class="nav-link" onclick="goTo('pom',this)">📦 pom.xml</a></li>
+    <li><a href="#properties" class="nav-link" onclick="goTo('properties',this)">⚙️ application.properties</a></li>
+
+    <li class="nav-section">ARCHITECTURE</li>
+    <li><a href="#main" class="nav-link" onclick="goTo('main',this)">🚀 Main Class</a></li>
+    <li><a href="#entity" class="nav-link" onclick="goTo('entity',this)">🗄️ Entity / Model</a></li>
+    <li><a href="#dao" class="nav-link" onclick="goTo('dao',this)">💾 DAO / Repository</a></li>
+    <li><a href="#service" class="nav-link" onclick="goTo('service',this)">⚡ Service</a></li>
+    <li><a href="#controller" class="nav-link" onclick="goTo('controller',this)">🎮 Controller</a></li>
+
+    <li class="nav-section">AVANCÉ</li>
+    <li><a href="#exceptions" class="nav-link" onclick="goTo('exceptions',this)">🚨 Exceptions</a></li>
+    <li><a href="#swagger" class="nav-link" onclick="goTo('swagger',this)">📖 Swagger / OpenAPI</a></li>
+    <li><a href="#annotations" class="nav-link" onclick="goTo('annotations',this)">🏷️ Annotations</a></li>
+    <li><a href="#flow" class="nav-link" onclick="goTo('flow',this)">🔄 Flux de requête</a></li>
+    <li><a href="#database" class="nav-link" onclick="goTo('database',this)">🛢️ Base de données</a></li>
+    <li><a href="#tests" class="nav-link" onclick="goTo('tests',this)">🧪 Tests</a></li>
+
+    <li class="nav-section">EXAMEN</li>
+    <li><a href="#quiz" class="nav-link" onclick="goTo('quiz',this)">📝 Quiz oral</a></li>
+  </ul>
+
+  <div class="theme-toggle">
+    <button onclick="toggleTheme()" id="themeBtn">🌙 Mode sombre</button>
+  </div>
+</nav>
+
+<!-- HAMBURGER -->
+<button class="hamburger" id="hamburger" onclick="toggleSidebar()">☰</button>
+
+<!-- MAIN -->
+<main class="main-content" id="mainContent">
+
+  <!-- ═══════════════ HOME ═══════════════ -->
+  <section id="home" class="page active">
+    <div class="hero">
+      <div class="hero-badge">Spring Boot 3.2 · Java 17 · H2 · JPA</div>
+      <h1 class="hero-title">Clinic API<br/><span>Masterclass complète</span></h1>
+      <p class="hero-sub">Un guide interactif ultra-détaillé pour comprendre chaque ligne de ce projet Spring Boot et réussir ton examen oral à la FSBM.</p>
+      <div class="hero-buttons">
+        <button class="btn-primary" onclick="goTo('structure', document.querySelector('[href=\'#structure\']'))">Commencer →</button>
+        <button class="btn-secondary" onclick="goTo('quiz', document.querySelector('[href=\'#quiz\']'))">Aller au Quiz</button>
+      </div>
+    </div>
+
+    <div class="cards-grid">
+      <div class="overview-card" onclick="goTo('entity', document.querySelector('[href=\'#entity\']'))">
+        <div class="card-icon">🗄️</div>
+        <h3>Entity / Model</h3>
+        <p>La classe <code>Patient</code> mappée sur la table SQL via JPA/Hibernate</p>
+      </div>
+      <div class="overview-card" onclick="goTo('dao', document.querySelector('[href=\'#dao\']'))">
+        <div class="card-icon">💾</div>
+        <h3>DAO / Repository</h3>
+        <p>Interface <code>PatientRepository</code> pour communiquer avec la BDD</p>
+      </div>
+      <div class="overview-card" onclick="goTo('service', document.querySelector('[href=\'#service\']'))">
+        <div class="card-icon">⚡</div>
+        <h3>Service</h3>
+        <p>Logique métier dans <code>PatientService</code> : CRUD + recherche</p>
+      </div>
+      <div class="overview-card" onclick="goTo('controller', document.querySelector('[href=\'#controller\']'))">
+        <div class="card-icon">🎮</div>
+        <h3>Controller REST</h3>
+        <p><code>PatientController</code> : 7 endpoints HTTP exposés à l'extérieur</p>
+      </div>
+      <div class="overview-card" onclick="goTo('exceptions', document.querySelector('[href=\'#exceptions\']'))">
+        <div class="card-icon">🚨</div>
+        <h3>Gestion d'erreurs</h3>
+        <p>GlobalExceptionHandler + ErrorResponse + 404/400/500 propres</p>
+      </div>
+      <div class="overview-card" onclick="goTo('annotations', document.querySelector('[href=\'#annotations\']'))">
+        <div class="card-icon">🏷️</div>
+        <h3>Annotations</h3>
+        <p>Toutes les annotations Spring expliquées avec exemples</p>
+      </div>
+    </div>
+
+    <div class="arch-diagram">
+      <h2>Architecture 3 couches</h2>
+      <div class="layers">
+        <div class="layer layer-web">
+          <span class="layer-label">Couche WEB</span>
+          <div class="layer-content">PatientController<br/><small>@RestController</small></div>
+        </div>
+        <div class="layer-arrow">↕</div>
+        <div class="layer layer-service">
+          <span class="layer-label">Couche MÉTIER</span>
+          <div class="layer-content">PatientService<br/><small>@Service</small></div>
+        </div>
+        <div class="layer-arrow">↕</div>
+        <div class="layer layer-dao">
+          <span class="layer-label">Couche DONNÉES</span>
+          <div class="layer-content">PatientRepository<br/><small>@Repository</small></div>
+        </div>
+        <div class="layer-arrow">↕</div>
+        <div class="layer layer-db">
+          <span class="layer-label">BASE DE DONNÉES</span>
+          <div class="layer-content">H2 In-Memory<br/><small>Table PATIENT</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ STRUCTURE ═══════════════ -->
+  <section id="structure" class="page">
+    <div class="page-header">
+      <h1>📁 Structure du projet</h1>
+      <p>Comment les fichiers sont organisés et pourquoi.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="file-tree">
+        <div class="tree-title">clinic-api/</div>
+        <pre class="tree">
+clinic-api/
+├── 📄 pom.xml                          ← Configuration Maven
+├── 📄 HELP.md
+└── src/
+    ├── main/
+    │   ├── java/com/clinic/clinic_api/
+    │   │   ├── 🚀 ClinicApiApplication.java     ← Point d'entrée
+    │   │   ├── ⚙️  SwaggerConfig.java            ← Config Swagger
+    │   │   ├── model/
+    │   │   │   └── 🗄️  Patient.java              ← Entity JPA
+    │   │   ├── dao/
+    │   │   │   └── 💾 PatientRepository.java    ← Accès BDD
+    │   │   ├── service/
+    │   │   │   └── ⚡ PatientService.java        ← Logique métier
+    │   │   └── web/
+    │   │       ├── controller/
+    │   │       │   └── 🎮 PatientController.java ← API REST
+    │   │       └── exceptions/
+    │   │           ├── 🚨 PatientNotFoundException.java
+    │   │           ├── 🚨 GlobalExceptionHandler.java
+    │   │           └── 🚨 ErrorResponse.java
+    │   └── resources/
+    │       ├── ⚙️  application.properties       ← Config Spring
+    │       ├── 🛢️  schema.sql                    ← Création table
+    │       └── 🛢️  data.sql                      ← Données initiales
+    └── test/
+        └── 🧪 ClinicApiApplicationTests.java    ← Tests unitaires
+        </pre>
+      </div>
+
+      <div class="explanations">
+        <div class="exp-card">
+          <h3>📦 Packages Java — pourquoi cette organisation ?</h3>
+          <p>Spring Boot utilise le <strong>pattern MVC en couches</strong> (Layered Architecture). Chaque package a une responsabilité unique :</p>
+          <ul>
+            <li><code>model/</code> → Les données (ce qu'on stocke)</li>
+            <li><code>dao/</code> → Comment on stocke (accès BDD)</li>
+            <li><code>service/</code> → Ce qu'on fait avec les données</li>
+            <li><code>web/controller/</code> → Comment on expose les données à l'extérieur</li>
+            <li><code>web/exceptions/</code> → Comment on gère les erreurs</li>
+          </ul>
+          <div class="callout">💡 Cette séparation s'appelle le principe de <strong>Séparation des Préoccupations (SoC)</strong>. Si demain tu changes de BDD, tu ne touches qu'au DAO. Si tu changes la logique métier, tu ne touches qu'au service.</div>
+        </div>
+
+        <div class="exp-card">
+          <h3>🗂️ resources/ — les fichiers de configuration</h3>
+          <ul>
+            <li><strong>application.properties</strong> → Toute la config Spring (BDD, ports, Swagger…)</li>
+            <li><strong>schema.sql</strong> → Crée la table SQL au démarrage</li>
+            <li><strong>data.sql</strong> → Insère des données de test au démarrage</li>
+          </ul>
+          <div class="callout">⚠️ Ces fichiers sont lus automatiquement par Spring Boot au démarrage. Tu n'as rien à appeler manuellement.</div>
+        </div>
+
+        <div class="exp-card">
+          <h3>🏭 Package principal : <code>com.clinic.clinic_api</code></h3>
+          <p>C'est le package racine. Spring Boot scanne automatiquement tous les sous-packages pour trouver les classes annotées (<code>@Component</code>, <code>@Service</code>, etc.).</p>
+          <div class="callout">🚨 <strong>Important :</strong> La classe principale <code>ClinicApiApplication</code> doit être dans le package racine, sinon Spring ne trouve pas les autres classes !</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ POM ═══════════════ -->
+  <section id="pom" class="page">
+    <div class="page-header">
+      <h1>📦 pom.xml — Le chef d'orchestre Maven</h1>
+      <p>Ce fichier XML est le cœur de ton projet Maven. Il définit tout ce dont le projet a besoin.</p>
+    </div>
+
+    <div class="concept-grid">
+      <div class="concept-box">
+        <h3>🏷️ Identité du projet</h3>
+        <div class="code-block">
+<span class="code-comment">/* Identité unique du projet */</span>
+&lt;groupId&gt;<span class="code-hl">com.clinic</span>&lt;/groupId&gt;
+&lt;artifactId&gt;<span class="code-hl">clinic-api</span>&lt;/artifactId&gt;
+&lt;version&gt;<span class="code-hl">0.0.1-SNAPSHOT</span>&lt;/version&gt;</div>
+        <p><strong>groupId</strong> = nom de ton organisation (comme un domaine inversé)<br/>
+        <strong>artifactId</strong> = nom de ton projet<br/>
+        <strong>version</strong> = SNAPSHOT = en développement</p>
+      </div>
+
+      <div class="concept-box">
+        <h3>👪 Parent Spring Boot</h3>
+        <div class="code-block">
+&lt;parent&gt;
+  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+  &lt;artifactId&gt;<span class="code-hl">spring-boot-starter-parent</span>&lt;/artifactId&gt;
+  &lt;version&gt;<span class="code-hl">3.2.3</span>&lt;/version&gt;
+&lt;/parent&gt;</div>
+        <p>Ce <strong>parent</strong> gère automatiquement les versions de toutes les dépendances Spring. C'est lui qui dit "Spring Web utilise telle version de Jackson, telle version de Tomcat, etc."</p>
+      </div>
+    </div>
+
+    <h2 class="section-title">📚 Les dépendances expliquées</h2>
+    <div class="deps-list">
+      <div class="dep-item">
+        <div class="dep-name">spring-boot-starter-web</div>
+        <div class="dep-desc">
+          <strong>Rôle :</strong> Crée un serveur web intégré (Tomcat par défaut) + permet de créer des contrôleurs REST.<br/>
+          <strong>Contient :</strong> Spring MVC, Jackson (JSON ↔ Java), Tomcat<br/>
+          <strong>Analogie :</strong> C'est comme installer Apache/Nginx + un framework web d'un coup.
+        </div>
+      </div>
+      <div class="dep-item">
+        <div class="dep-name">spring-boot-starter-data-jpa</div>
+        <div class="dep-desc">
+          <strong>Rôle :</strong> Permet de parler à la base de données avec JPA/Hibernate sans écrire du SQL à la main.<br/>
+          <strong>Contient :</strong> JPA (spécification), Hibernate (implémentation), Spring Data<br/>
+          <strong>Analogie :</strong> C'est un traducteur entre ton Java et ta BDD.
+        </div>
+      </div>
+      <div class="dep-item">
+        <div class="dep-name">spring-boot-starter-validation</div>
+        <div class="dep-desc">
+          <strong>Rôle :</strong> Valide automatiquement les données entrantes (<code>@NotBlank</code>, <code>@Size</code>, <code>@Pattern</code>).<br/>
+          <strong>Contient :</strong> Hibernate Validator (Bean Validation)<br/>
+          <strong>Analogie :</strong> Un agent de sécurité qui vérifie les papiers avant de laisser entrer.
+        </div>
+      </div>
+      <div class="dep-item">
+        <div class="dep-name">h2 (runtime)</div>
+        <div class="dep-desc">
+          <strong>Rôle :</strong> Base de données Java in-memory. Elle existe seulement pendant l'exécution du programme.<br/>
+          <strong>scope runtime :</strong> Présente à l'exécution seulement, pas à la compilation.<br/>
+          <strong>Analogie :</strong> Un tableau blanc qu'on efface à chaque redémarrage.
+        </div>
+      </div>
+      <div class="dep-item">
+        <div class="dep-name">springdoc-openapi-starter-webmvc-ui</div>
+        <div class="dep-desc">
+          <strong>Rôle :</strong> Génère automatiquement une documentation Swagger (interface web interactive pour tester l'API).<br/>
+          <strong>Accès :</strong> <code>http://localhost:8080/swagger-ui.html</code><br/>
+          <strong>Analogie :</strong> Un manuel d'utilisation automatique de ton API.
+        </div>
+      </div>
+      <div class="dep-item">
+        <div class="dep-name">spring-boot-starter-test (test scope)</div>
+        <div class="dep-desc">
+          <strong>Rôle :</strong> Framework de tests (JUnit 5, Mockito, AssertJ).<br/>
+          <strong>scope test :</strong> Présent seulement lors des tests, pas en production.<br/>
+          <strong>Analogie :</strong> La salle de simulation pour tester les pilotes avant le vrai vol.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ PROPERTIES ═══════════════ -->
+  <section id="properties" class="page">
+    <div class="page-header">
+      <h1>⚙️ application.properties</h1>
+      <p>Le fichier de configuration central de Spring Boot. Chaque ligne contrôle un comportement.</p>
+    </div>
+
+    <div class="code-annotated">
+      <div class="code-line">
+        <span class="code-text">spring.application.name=<span class="code-val">clinic-api</span></span>
+        <span class="code-ann">Nom de l'application (apparaît dans les logs et Actuator)</span>
+      </div>
+      <div class="code-separator">— Configuration H2 —</div>
+      <div class="code-line">
+        <span class="code-text">spring.datasource.url=<span class="code-val">jdbc:h2:mem:clinicdb</span></span>
+        <span class="code-ann">URL JDBC → H2 en mémoire, nom "clinicdb"</span>
+      </div>
+      <div class="code-line">
+        <span class="code-text">spring.datasource.driver-class-name=<span class="code-val">org.h2.Driver</span></span>
+        <span class="code-ann">Driver JDBC pour H2 (classe Java qui "parle" à H2)</span>
+      </div>
+      <div class="code-line">
+        <span class="code-text">spring.datasource.username=<span class="code-val">sa</span></span>
+        <span class="code-ann">Utilisateur par défaut de H2 (System Administrator)</span>
+      </div>
+      <div class="code-line">
+        <span class="code-text">spring.datasource.password=<span class="code-val">(vide)</span></span>
+        <span class="code-ann">Pas de mot de passe pour H2 en dev</span>
+      </div>
+      <div class="code-line">
+        <span class="code-text">spring.jpa.database-platform=<span class="code-val">org.hibernate.dialect.H2Dialect</span></span>
+        <span class="code-ann">Dialect SQL pour H2 (Hibernate génère du SQL compatible H2)</span>
+      </div>
+      <div class="code-line">
+        <span class="code-text">spring.h2.console.enabled=<span class="code-val">true</span></span>
+        <span class="code-ann">Active l'interface web H2 Console</span>
+      </div>
+      <div class="code-line">
+        <span class="code-text">spring.h2.console.path=<span class="code-val">/h2-console</span></span>
+        <span class="code-ann">URL d'accès à la console H2 → localhost:8080/h2-console</span>
+      </div>
+      <div class="code-separator">— Initialisation SQL —</div>
+      <div class="code-line">
+        <span class="code-text">spring.sql.init.mode=<span class="code-val">always</span></span>
+        <span class="code-ann">Exécute schema.sql + data.sql à chaque démarrage</span>
+      </div>
+      <div class="code-line">
+        <span class="code-text">spring.jpa.hibernate.ddl-auto=<span class="code-val">none</span></span>
+        <span class="code-ann">Hibernate ne crée PAS les tables automatiquement (on utilise schema.sql)</span>
+      </div>
+      <div class="code-separator">— Swagger —</div>
+      <div class="code-line">
+        <span class="code-text">springdoc.api-docs.path=<span class="code-val">/api-docs</span></span>
+        <span class="code-ann">URL du JSON OpenAPI brut</span>
+      </div>
+      <div class="code-line">
+        <span class="code-text">springdoc.swagger-ui.path=<span class="code-val">/swagger-ui.html</span></span>
+        <span class="code-ann">URL de l'interface Swagger visuelle</span>
+      </div>
+    </div>
+
+    <div class="callout-box">
+      <h3>🔑 ddl-auto : les valeurs possibles (question d'examen fréquente !)</h3>
+      <table class="info-table">
+        <tr><th>Valeur</th><th>Comportement</th><th>Quand l'utiliser</th></tr>
+        <tr><td><code>none</code></td><td>Hibernate ne fait rien avec la structure</td><td>Quand tu gères toi-même le schéma (schema.sql)</td></tr>
+        <tr><td><code>validate</code></td><td>Vérifie que la BDD correspond à l'entité</td><td>Production</td></tr>
+        <tr><td><code>update</code></td><td>Met à jour le schéma sans supprimer de données</td><td>Développement avec vraie BDD</td></tr>
+        <tr><td><code>create</code></td><td>Recrée les tables à chaque démarrage</td><td>Tests</td></tr>
+        <tr><td><code>create-drop</code></td><td>Crée au démarrage, supprime à l'arrêt</td><td>Tests temporaires</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════ MAIN ═══════════════ -->
+  <section id="main" class="page">
+    <div class="page-header">
+      <h1>🚀 La classe principale</h1>
+      <p>Le point d'entrée de toute application Spring Boot.</p>
+    </div>
+
+    <div class="code-block full">
+<span class="code-pkg">package</span> com.clinic.clinic_api;
+
+<span class="code-import">import</span> org.springframework.boot.SpringApplication;
+<span class="code-import">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;
+
+<span class="code-annotation">@SpringBootApplication</span>
+<span class="code-kw">public class</span> <span class="code-class">ClinicApiApplication</span> {
+
+    <span class="code-kw">public static void</span> main(String[] args) {
+        SpringApplication.<span class="code-method">run</span>(ClinicApiApplication.<span class="code-kw">class</span>, args);
+    }
+
+}</div>
+
+    <div class="deep-explain">
+      <div class="explain-card">
+        <h3>🔬 @SpringBootApplication — que fait-elle exactement ?</h3>
+        <p>Cette annotation est une <strong>méta-annotation</strong> qui combine 3 annotations en une seule :</p>
+        <div class="annotation-breakdown">
+          <div class="ann-part">
+            <code>@SpringBootConfiguration</code>
+            <span>Marque cette classe comme configuration Spring (équivalent de @Configuration)</span>
+          </div>
+          <div class="ann-part">
+            <code>@EnableAutoConfiguration</code>
+            <span>Active la magie Spring Boot : détecte automatiquement tes dépendances et configure tout. Ex: tu as H2 dans le classpath → Spring configure automatiquement la datasource H2.</span>
+          </div>
+          <div class="ann-part">
+            <code>@ComponentScan</code>
+            <span>Scanne récursivement tous les packages depuis ce package pour trouver les @Component, @Service, @Repository, @Controller…</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="explain-card">
+        <h3>⚙️ SpringApplication.run() — que se passe-t-il ?</h3>
+        <ol class="steps-list">
+          <li>Spring Boot lit <code>application.properties</code></li>
+          <li>Spring crée le <strong>contexte d'application</strong> (un gros conteneur d'objets)</li>
+          <li>Spring scanne les packages et crée les <strong>beans</strong> (PatientService, PatientController…)</li>
+          <li>Spring injecte les dépendances (@Autowired, injection par constructeur)</li>
+          <li>Hibernate lit les <code>@Entity</code> et configure le mapping</li>
+          <li>Spring exécute <code>schema.sql</code> puis <code>data.sql</code></li>
+          <li>Le serveur Tomcat démarre sur le port 8080</li>
+          <li>✅ L'API est prête à recevoir des requêtes !</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ ENTITY ═══════════════ -->
+  <section id="entity" class="page">
+    <div class="page-header">
+      <h1>🗄️ Entity / Model — Patient.java</h1>
+      <p>La classe qui représente tes données. Le pont entre Java et SQL.</p>
+    </div>
+
+    <div class="what-is-box">
+      <h3>🤔 C'est quoi une Entity ?</h3>
+      <p>Une <strong>Entity</strong> est une classe Java qui représente une table en base de données. Chaque instance de la classe = une ligne dans la table. Chaque champ Java = une colonne SQL.</p>
+      <p><strong>Analogie :</strong> Si la BDD est un Excel, l'Entity est la définition des colonnes du tableau. Un objet Patient = une ligne remplie.</p>
+    </div>
+
+    <div class="code-block full">
+<span class="code-annotation">@Entity</span>                        <span class="code-comment">← Dit à JPA : "cette classe = une table"</span>
+<span class="code-annotation">@Table</span>(name = <span class="code-str">"PATIENT"</span>)     <span class="code-comment">← Nom exact de la table SQL</span>
+<span class="code-annotation">@Schema</span>(description = <span class="code-str">"Entité représentant un patient"</span>)  <span class="code-comment">← Doc Swagger</span>
+<span class="code-kw">public class</span> <span class="code-class">Patient</span> {
+
+    <span class="code-annotation">@Id</span>                                          <span class="code-comment">← Clé primaire</span>
+    <span class="code-annotation">@GeneratedValue</span>(strategy = GenerationType.IDENTITY) <span class="code-comment">← AUTO_INCREMENT</span>
+    <span class="code-kw">private</span> Long id;
+
+    <span class="code-annotation">@NotBlank</span>(message = <span class="code-str">"Le nom est obligatoire"</span>)
+    <span class="code-annotation">@Size</span>(min = 2, max = 100)
+    <span class="code-kw">private</span> String nom;
+
+    <span class="code-annotation">@NotBlank</span>(message = <span class="code-str">"Le prénom est obligatoire"</span>)
+    <span class="code-annotation">@Size</span>(min = 2, max = 100)
+    <span class="code-kw">private</span> String prenom;
+
+    <span class="code-annotation">@NotNull</span>
+    <span class="code-annotation">@Pattern</span>(regexp = <span class="code-str">"\\d{15}"</span>, message = <span class="code-str">"Doit contenir exactement 15 chiffres"</span>)
+    <span class="code-kw">private</span> String numeroSecu;
+
+    <span class="code-annotation">@JsonIgnore</span>                     <span class="code-comment">← Ce champ N'apparaît PAS dans le JSON renvoyé !</span>
+    <span class="code-kw">private</span> String diagnosticConfidentiel;
+
+    <span class="code-comment">// Constructeurs, Getters, Setters, toString()...</span>
+}</div>
+
+    <div class="cards-grid">
+      <div class="explain-card">
+        <h3>@JsonIgnore — la sécurité !</h3>
+        <p>Le diagnostic est confidentiel. Sans <code>@JsonIgnore</code>, il apparaîtrait dans la réponse JSON et n'importe qui pourrait le voir via l'API. Avec <code>@JsonIgnore</code>, Jackson (le convertisseur JSON) ignore complètement ce champ.</p>
+        <div class="callout">✅ Le champ existe bien en BDD (les tests le prouvent), mais il est masqué dans l'API.</div>
+      </div>
+      <div class="explain-card">
+        <h3>Validation Bean (@Valid)</h3>
+        <p>Les annotations <code>@NotBlank</code>, <code>@Size</code>, <code>@Pattern</code> définissent des contraintes. Elles sont activées par <code>@Valid</code> dans le contrôleur.</p>
+        <ul>
+          <li><code>@NotBlank</code> → pas null ET pas vide</li>
+          <li><code>@NotNull</code> → pas null seulement</li>
+          <li><code>@Size(min,max)</code> → longueur du String</li>
+          <li><code>@Pattern(regexp)</code> → doit matcher ce regex</li>
+        </ul>
+      </div>
+      <div class="explain-card">
+        <h3>GenerationType.IDENTITY</h3>
+        <p>L'ID est généré automatiquement par la BDD (AUTO_INCREMENT). Tu n'as jamais besoin de le fournir lors de la création.</p>
+        <table class="info-table">
+          <tr><th>Stratégie</th><th>Qui génère l'ID ?</th></tr>
+          <tr><td>IDENTITY</td><td>La base de données (AUTO_INCREMENT)</td></tr>
+          <tr><td>SEQUENCE</td><td>Une séquence SQL</td></tr>
+          <tr><td>AUTO</td><td>JPA choisit selon la BDD</td></tr>
+          <tr><td>TABLE</td><td>Une table spéciale</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="mapping-visual">
+      <h3>Mapping Java ↔ SQL</h3>
+      <div class="mapping-grid">
+        <div class="mapping-side">
+          <h4>Classe Java</h4>
+          <div class="map-item">Long id</div>
+          <div class="map-item">String nom</div>
+          <div class="map-item">String prenom</div>
+          <div class="map-item">String numeroSecu</div>
+          <div class="map-item">String diagnosticConfidentiel</div>
+        </div>
+        <div class="mapping-arrows">
+          <div class="map-arrow">↔</div>
+          <div class="map-arrow">↔</div>
+          <div class="map-arrow">↔</div>
+          <div class="map-arrow">↔</div>
+          <div class="map-arrow">↔</div>
+        </div>
+        <div class="mapping-side">
+          <h4>Colonne SQL</h4>
+          <div class="map-item sql">BIGINT AUTO_INCREMENT PK</div>
+          <div class="map-item sql">VARCHAR(100) NOT NULL</div>
+          <div class="map-item sql">VARCHAR(100) NOT NULL</div>
+          <div class="map-item sql">VARCHAR(15) NOT NULL UNIQUE</div>
+          <div class="map-item sql">VARCHAR(500)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ DAO ═══════════════ -->
+  <section id="dao" class="page">
+    <div class="page-header">
+      <h1>💾 DAO / Repository — PatientRepository.java</h1>
+      <p>La couche qui communique directement avec la base de données.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="what-is-box">
+        <h3>🤔 DAO vs Repository — quelle différence ?</h3>
+        <p><strong>DAO (Data Access Object)</strong> est le pattern de conception général qui sépare la logique d'accès aux données du reste.<br/><br/>
+        <strong>Repository</strong> est l'implémentation Spring/JPA de ce pattern. Dans Spring, on dit "Repository" mais c'est la même idée.</p>
+        <p><strong>Analogie :</strong> Le DAO est le guichetier d'une banque. Tu lui demandes "donne-moi le solde du compte X" et il va chercher dans les archives (BDD) sans que toi (le service) tu saches comment.</p>
+      </div>
+      <div class="what-is-box">
+        <h3>🔮 La magie de JpaRepository</h3>
+        <p><code>JpaRepository&lt;Patient, Long&gt;</code> te donne automatiquement <strong>sans écrire une seule ligne de code</strong> :</p>
+        <ul>
+          <li><code>findAll()</code> → SELECT * FROM PATIENT</li>
+          <li><code>findById(id)</code> → SELECT * WHERE id=?</li>
+          <li><code>save(p)</code> → INSERT ou UPDATE</li>
+          <li><code>deleteById(id)</code> → DELETE WHERE id=?</li>
+          <li><code>count()</code> → SELECT COUNT(*)</li>
+          <li><code>existsById(id)</code> → SELECT 1 WHERE id=?</li>
+          <li>Et des dizaines d'autres !</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="code-block full">
+<span class="code-annotation">@Repository</span>
+<span class="code-kw">public interface</span> <span class="code-class">PatientRepository</span> <span class="code-kw">extends</span> <span class="code-class">JpaRepository</span>&lt;Patient, Long&gt; {
+
+    <span class="code-comment">// 1. Dérivation de méthode — Spring génère le SQL automatiquement</span>
+    Optional&lt;Patient&gt; <span class="code-method">findByNumeroSecu</span>(String numeroSecu);
+    <span class="code-comment">// → SELECT * FROM PATIENT WHERE NUMERO_SECU = ?</span>
+
+    <span class="code-comment">// 2. Requête JPQL custom avec @Query</span>
+    <span class="code-annotation">@Query</span>(<span class="code-str">"SELECT p FROM Patient p WHERE LOWER(p.nom) LIKE LOWER(CONCAT('%', :nom, '%'))"</span>)
+    List&lt;Patient&gt; <span class="code-method">rechercherParNom</span>(<span class="code-annotation">@Param</span>(<span class="code-str">"nom"</span>) String nom);
+    <span class="code-comment">// → Recherche insensible à la casse avec wildcard</span>
+
+    <span class="code-comment">// 3. JPQL avec deux paramètres</span>
+    <span class="code-annotation">@Query</span>(<span class="code-str">"SELECT p FROM Patient p WHERE LOWER(p.nom)=LOWER(:nom) AND LOWER(p.prenom)=LOWER(:prenom)"</span>)
+    Optional&lt;Patient&gt; <span class="code-method">findByNomAndPrenom</span>(<span class="code-annotation">@Param</span>(<span class="code-str">"nom"</span>) String nom, <span class="code-annotation">@Param</span>(<span class="code-str">"prenom"</span>) String prenom);
+}</div>
+
+    <div class="cards-grid">
+      <div class="explain-card">
+        <h3>Dérivation de noms (Query Methods)</h3>
+        <p>Spring lit le nom de la méthode et génère le SQL. Les mots-clés reconnus :</p>
+        <ul>
+          <li><code>findBy</code> → SELECT WHERE</li>
+          <li><code>And</code> → AND</li>
+          <li><code>Or</code> → OR</li>
+          <li><code>Like</code> → LIKE</li>
+          <li><code>OrderBy</code> → ORDER BY</li>
+          <li><code>Not</code> → NOT</li>
+        </ul>
+        <div class="callout">Ex: <code>findByNomAndPrenom</code> → SELECT WHERE NOM=? AND PRENOM=?</div>
+      </div>
+      <div class="explain-card">
+        <h3>JPQL vs SQL natif</h3>
+        <p><strong>JPQL</strong> utilise les noms des classes Java (pas des tables SQL) :</p>
+        <code>SELECT p FROM <strong>Patient</strong> p WHERE p.<strong>nom</strong>…</code>
+        <p><strong>SQL natif</strong> utilise les noms SQL :</p>
+        <code>SELECT * FROM <strong>PATIENT</strong> WHERE <strong>NOM</strong>…</code>
+        <div class="callout">Le projet utilise JPQL → plus portable, indépendant du SGBD.</div>
+      </div>
+      <div class="explain-card">
+        <h3>Optional&lt;T&gt; — pourquoi ?</h3>
+        <p><code>Optional</code> signifie que le résultat <em>peut être absent</em>. Au lieu de retourner <code>null</code> (dangereux → NullPointerException), on retourne un Optional vide.</p>
+        <p>Dans le service : <code>.orElseThrow()</code> lance une exception propre si vide.</p>
+      </div>
+    </div>
+
+    <div class="hierarchy-box">
+      <h3>Hiérarchie de JpaRepository</h3>
+      <div class="hierarchy">
+        <div class="hier-item root">JpaRepository&lt;T, ID&gt;</div>
+        <div class="hier-arrow">↑</div>
+        <div class="hier-item">PagingAndSortingRepository</div>
+        <div class="hier-arrow">↑</div>
+        <div class="hier-item">CrudRepository</div>
+        <div class="hier-arrow">↑</div>
+        <div class="hier-item">Repository (marker interface)</div>
+      </div>
+      <p>Chaque niveau ajoute des méthodes. <code>JpaRepository</code> est le plus complet.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════ SERVICE ═══════════════ -->
+  <section id="service" class="page">
+    <div class="page-header">
+      <h1>⚡ Service — PatientService.java</h1>
+      <p>La couche métier : le cerveau de l'application.</p>
+    </div>
+
+    <div class="what-is-box">
+      <h3>🤔 Pourquoi une couche Service ?</h3>
+      <p>Le Service contient la <strong>logique métier</strong> = les règles spécifiques à ton domaine. Il fait le lien entre le Controller (qui reçoit les requêtes HTTP) et le DAO (qui parle à la BDD).</p>
+      <p><strong>Analogie :</strong> Le Controller est le serveur d'un restaurant (prend la commande), le Service est le cuisinier (prépare le plat avec les règles de la cuisine), le DAO est le garde-manger (fournit les ingrédients).</p>
+    </div>
+
+    <div class="code-block full">
+<span class="code-annotation">@Service</span>
+<span class="code-kw">public class</span> <span class="code-class">PatientService</span> {
+
+    <span class="code-comment">// Injection par constructeur (BONNE PRATIQUE vs @Autowired sur le champ)</span>
+    <span class="code-kw">private final</span> PatientRepository repository;
+
+    <span class="code-kw">public</span> PatientService(PatientRepository repository) {
+        <span class="code-kw">this</span>.repository = repository;   <span class="code-comment">← Spring injecte automatiquement</span>
+    }
+
+    <span class="code-comment">// ===== READ =====</span>
+    <span class="code-kw">public</span> List&lt;Patient&gt; <span class="code-method">getAllPatients</span>() {
+        <span class="code-kw">return</span> repository.<span class="code-method">findAll</span>();     <span class="code-comment">← JpaRepository → SELECT * FROM PATIENT</span>
+    }
+
+    <span class="code-kw">public</span> Patient <span class="code-method">getPatientById</span>(Long id) {
+        <span class="code-kw">return</span> repository.<span class="code-method">findById</span>(id)
+                .<span class="code-method">orElseThrow</span>(() -&gt; <span class="code-kw">new</span> PatientNotFoundException(id));
+                <span class="code-comment">← Si absent → exception 404 (gérée par GlobalExceptionHandler)</span>
+    }
+
+    <span class="code-comment">// ===== CREATE =====</span>
+    <span class="code-kw">public</span> Patient <span class="code-method">createPatient</span>(Patient patient) {
+        <span class="code-kw">return</span> repository.<span class="code-method">save</span>(patient);  <span class="code-comment">← INSERT INTO PATIENT...</span>
+    }
+
+    <span class="code-comment">// ===== UPDATE =====</span>
+    <span class="code-kw">public</span> Patient <span class="code-method">updatePatient</span>(Long id, Patient updated) {
+        Patient existing = <span class="code-method">getPatientById</span>(id);   <span class="code-comment">← Vérifie existence (404 si absent)</span>
+        existing.<span class="code-method">setNom</span>(updated.<span class="code-method">getNom</span>());
+        existing.<span class="code-method">setPrenom</span>(updated.<span class="code-method">getPrenom</span>());
+        existing.<span class="code-method">setNumeroSecu</span>(updated.<span class="code-method">getNumeroSecu</span>());
+        existing.<span class="code-method">setDiagnosticConfidentiel</span>(updated.<span class="code-method">getDiagnosticConfidentiel</span>());
+        <span class="code-kw">return</span> repository.<span class="code-method">save</span>(existing);    <span class="code-comment">← UPDATE PATIENT SET... WHERE id=?</span>
+    }
+
+    <span class="code-comment">// ===== DELETE =====</span>
+    <span class="code-kw">public void</span> <span class="code-method">deletePatient</span>(Long id) {
+        <span class="code-method">getPatientById</span>(id);              <span class="code-comment">← Vérifie d'abord que le patient existe !</span>
+        repository.<span class="code-method">deleteById</span>(id);    <span class="code-comment">← DELETE FROM PATIENT WHERE id=?</span>
+    }
+
+    <span class="code-comment">// ===== RECHERCHE MÉTIER =====</span>
+    <span class="code-kw">public</span> Patient <span class="code-method">findByNumeroSecu</span>(String secu) {
+        <span class="code-kw">return</span> repository.<span class="code-method">findByNumeroSecu</span>(secu)
+                .<span class="code-method">orElseThrow</span>(() -&gt; <span class="code-kw">new</span> PatientNotFoundException(<span class="code-str">"secu = "</span> + secu));
+    }
+
+    <span class="code-kw">public</span> List&lt;Patient&gt; <span class="code-method">findByNom</span>(String nom) {
+        <span class="code-kw">return</span> repository.<span class="code-method">rechercherParNom</span>(nom);
+    }
+}</div>
+
+    <div class="key-point-box">
+      <h3>🔑 Point crucial : Injection par constructeur vs @Autowired sur champ</h3>
+      <div class="compare-grid">
+        <div class="compare-bad">
+          <h4>❌ Mauvaise pratique (champ)</h4>
+          <div class="code-block">
+<span class="code-annotation">@Autowired</span>
+<span class="code-kw">private</span> PatientRepository repo;</div>
+          <ul>
+            <li>Difficile à tester (on ne peut pas injecter facilement un mock)</li>
+            <li>Dépendances cachées</li>
+            <li>Le champ peut être null au démarrage</li>
+          </ul>
+        </div>
+        <div class="compare-good">
+          <h4>✅ Bonne pratique (constructeur)</h4>
+          <div class="code-block">
+<span class="code-kw">private final</span> PatientRepository repo;
+
+PatientService(PatientRepository repo) {
+    <span class="code-kw">this</span>.repo = repo;
+}</div>
+          <ul>
+            <li>Testable facilement (inject un mock dans le constructeur)</li>
+            <li>Dépendances explicites</li>
+            <li><code>final</code> → immutable, thread-safe</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ CONTROLLER ═══════════════ -->
+  <section id="controller" class="page">
+    <div class="page-header">
+      <h1>🎮 Controller — PatientController.java</h1>
+      <p>La façade de ton API. Il reçoit les requêtes HTTP du monde extérieur.</p>
+    </div>
+
+    <div class="what-is-box">
+      <h3>🤔 Qu'est-ce qu'un Controller REST ?</h3>
+      <p>Le Controller est la <strong>porte d'entrée</strong> de ton application. Il écoute les requêtes HTTP, lit les paramètres, délègue au Service, et renvoie une réponse JSON.</p>
+      <p><strong>Analogie :</strong> Le réceptionniste d'un hôtel. Il ne fait pas le ménage (Service) ni ne gère les clés lui-même (DAO). Il accueille, oriente, et répond.</p>
+    </div>
+
+    <div class="endpoints-table">
+      <h3>📋 Les 7 endpoints de l'API</h3>
+      <table class="info-table endpoints">
+        <tr>
+          <th>Méthode</th><th>URL</th><th>Description</th><th>Réponse</th>
+        </tr>
+        <tr>
+          <td><span class="method get">GET</span></td>
+          <td><code>/api/patients</code></td>
+          <td>Tous les patients</td>
+          <td>200 + Liste</td>
+        </tr>
+        <tr>
+          <td><span class="method get">GET</span></td>
+          <td><code>/api/patients/{id}</code></td>
+          <td>Un patient par ID</td>
+          <td>200 ou 404</td>
+        </tr>
+        <tr>
+          <td><span class="method post">POST</span></td>
+          <td><code>/api/patients</code></td>
+          <td>Créer un patient</td>
+          <td>201 ou 400</td>
+        </tr>
+        <tr>
+          <td><span class="method put">PUT</span></td>
+          <td><code>/api/patients/{id}</code></td>
+          <td>Modifier un patient</td>
+          <td>200, 404 ou 400</td>
+        </tr>
+        <tr>
+          <td><span class="method delete">DELETE</span></td>
+          <td><code>/api/patients/{id}</code></td>
+          <td>Supprimer un patient</td>
+          <td>204 ou 404</td>
+        </tr>
+        <tr>
+          <td><span class="method get">GET</span></td>
+          <td><code>/api/patients/search/secu?secu=…</code></td>
+          <td>Rechercher par numéro sécu</td>
+          <td>200 ou 404</td>
+        </tr>
+        <tr>
+          <td><span class="method get">GET</span></td>
+          <td><code>/api/patients/search/nom?nom=…</code></td>
+          <td>Rechercher par nom (partiel)</td>
+          <td>200 + Liste</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="code-block full">
+<span class="code-annotation">@RestController</span>                         <span class="code-comment">← @Controller + @ResponseBody</span>
+<span class="code-annotation">@RequestMapping</span>(<span class="code-str">"/api/patients"</span>)          <span class="code-comment">← Préfixe commun à tous les endpoints</span>
+<span class="code-annotation">@Tag</span>(name = <span class="code-str">"Patients"</span>, description = <span class="code-str">"API de gestion des patients"</span>)
+<span class="code-kw">public class</span> <span class="code-class">PatientController</span> {
+
+    <span class="code-kw">private final</span> PatientService service;
+
+    <span class="code-kw">public</span> PatientController(PatientService service) { <span class="code-kw">this</span>.service = service; }
+
+    <span class="code-comment">// GET /api/patients → liste tous</span>
+    <span class="code-annotation">@GetMapping</span>
+    <span class="code-kw">public</span> ResponseEntity&lt;List&lt;Patient&gt;&gt; <span class="code-method">getAll</span>() {
+        <span class="code-kw">return</span> ResponseEntity.<span class="code-method">ok</span>(service.<span class="code-method">getAllPatients</span>());
+    }
+
+    <span class="code-comment">// GET /api/patients/5 → un patient par ID</span>
+    <span class="code-annotation">@GetMapping</span>(<span class="code-str">"/{id}"</span>)
+    <span class="code-kw">public</span> ResponseEntity&lt;Patient&gt; <span class="code-method">getById</span>(<span class="code-annotation">@PathVariable</span> Long id) {
+        <span class="code-kw">return</span> ResponseEntity.<span class="code-method">ok</span>(service.<span class="code-method">getPatientById</span>(id));
+    }
+
+    <span class="code-comment">// POST /api/patients → crée un patient</span>
+    <span class="code-annotation">@PostMapping</span>
+    <span class="code-kw">public</span> ResponseEntity&lt;Patient&gt; <span class="code-method">create</span>(<span class="code-annotation">@Valid @RequestBody</span> Patient patient) {
+        Patient created = service.<span class="code-method">createPatient</span>(patient);
+        <span class="code-kw">return</span> ResponseEntity.<span class="code-method">status</span>(HttpStatus.CREATED).<span class="code-method">body</span>(created);
+        <span class="code-comment">← Status 201 CREATED (pas 200 !) pour les créations</span>
+    }
+
+    <span class="code-comment">// PUT /api/patients/5 → modifie un patient</span>
+    <span class="code-annotation">@PutMapping</span>(<span class="code-str">"/{id}"</span>)
+    <span class="code-kw">public</span> ResponseEntity&lt;Patient&gt; <span class="code-method">update</span>(<span class="code-annotation">@PathVariable</span> Long id,
+                                              <span class="code-annotation">@Valid @RequestBody</span> Patient patient) {
+        <span class="code-kw">return</span> ResponseEntity.<span class="code-method">ok</span>(service.<span class="code-method">updatePatient</span>(id, patient));
+    }
+
+    <span class="code-comment">// DELETE /api/patients/5 → supprime</span>
+    <span class="code-annotation">@DeleteMapping</span>(<span class="code-str">"/{id}"</span>)
+    <span class="code-kw">public</span> ResponseEntity&lt;Void&gt; <span class="code-method">delete</span>(<span class="code-annotation">@PathVariable</span> Long id) {
+        service.<span class="code-method">deletePatient</span>(id);
+        <span class="code-kw">return</span> ResponseEntity.<span class="code-method">noContent</span>().<span class="code-method">build</span>();
+        <span class="code-comment">← Status 204 NO CONTENT (rien à retourner)</span>
+    }
+
+    <span class="code-comment">// GET /api/patients/search/secu?secu=175126012345699</span>
+    <span class="code-annotation">@GetMapping</span>(<span class="code-str">"/search/secu"</span>)
+    <span class="code-kw">public</span> ResponseEntity&lt;Patient&gt; <span class="code-method">searchBySecu</span>(<span class="code-annotation">@RequestParam</span> String secu) {
+        <span class="code-kw">return</span> ResponseEntity.<span class="code-method">ok</span>(service.<span class="code-method">findByNumeroSecu</span>(secu));
+    }
+
+    <span class="code-comment">// GET /api/patients/search/nom?nom=Dup</span>
+    <span class="code-annotation">@GetMapping</span>(<span class="code-str">"/search/nom"</span>)
+    <span class="code-kw">public</span> ResponseEntity&lt;List&lt;Patient&gt;&gt; <span class="code-method">searchByNom</span>(<span class="code-annotation">@RequestParam</span> String nom) {
+        <span class="code-kw">return</span> ResponseEntity.<span class="code-method">ok</span>(service.<span class="code-method">findByNom</span>(nom));
+    }
+}</div>
+
+    <div class="http-codes-box">
+      <h3>📊 Codes HTTP utilisés — À retenir !</h3>
+      <div class="http-grid">
+        <div class="http-code code-200">200 OK<br/><small>Succès général</small></div>
+        <div class="http-code code-201">201 Created<br/><small>Ressource créée (POST)</small></div>
+        <div class="http-code code-204">204 No Content<br/><small>Supprimé (DELETE)</small></div>
+        <div class="http-code code-400">400 Bad Request<br/><small>Données invalides</small></div>
+        <div class="http-code code-404">404 Not Found<br/><small>Ressource introuvable</small></div>
+        <div class="http-code code-500">500 Server Error<br/><small>Erreur inattendue</small></div>
+      </div>
+    </div>
+
+    <div class="param-explain">
+      <h3>@PathVariable vs @RequestParam — question classique d'examen !</h3>
+      <div class="compare-grid">
+        <div class="compare-item">
+          <h4>@PathVariable</h4>
+          <code>GET /api/patients/<strong>{id}</strong></code><br/>
+          <code>GET /api/patients/<strong>5</strong></code>
+          <p>L'ID est <strong>dans l'URL</strong> (chemin). C'est une ressource spécifique.</p>
+          <div class="code-block"><span class="code-annotation">@GetMapping</span>(<span class="code-str">"/{id}"</span>)
+<span class="code-kw">public</span> Patient get(<span class="code-annotation">@PathVariable</span> Long id)</div>
+        </div>
+        <div class="compare-item">
+          <h4>@RequestParam</h4>
+          <code>GET /api/patients/search/nom<strong>?nom=Dup</strong></code>
+          <p>Le paramètre est dans la <strong>query string</strong> (après ?). C'est un filtre optionnel.</p>
+          <div class="code-block"><span class="code-annotation">@GetMapping</span>(<span class="code-str">"/search/nom"</span>)
+<span class="code-kw">public</span> List get(<span class="code-annotation">@RequestParam</span> String nom)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ EXCEPTIONS ═══════════════ -->
+  <section id="exceptions" class="page">
+    <div class="page-header">
+      <h1>🚨 Gestion des exceptions</h1>
+      <p>Comment transformer les erreurs Java en réponses HTTP propres.</p>
+    </div>
+
+    <div class="exception-flow">
+      <div class="exc-step">PatientNotFoundException<br/><small>extends RuntimeException</small></div>
+      <div class="exc-arrow">→</div>
+      <div class="exc-step">GlobalExceptionHandler<br/><small>@RestControllerAdvice</small></div>
+      <div class="exc-arrow">→</div>
+      <div class="exc-step">ErrorResponse JSON<br/><small>{status, message, timestamp}</small></div>
+      <div class="exc-arrow">→</div>
+      <div class="exc-step">HTTP 404<br/><small>Au client</small></div>
+    </div>
+
+    <div class="code-block full">
+<span class="code-comment">// 1. Exception métier personnalisée</span>
+<span class="code-kw">public class</span> <span class="code-class">PatientNotFoundException</span> <span class="code-kw">extends</span> RuntimeException {
+    <span class="code-kw">public</span> PatientNotFoundException(Long id) {
+        <span class="code-kw">super</span>(<span class="code-str">"Patient non trouvé avec l'id : "</span> + id);
+    }
+    <span class="code-kw">public</span> PatientNotFoundException(String message) {
+        <span class="code-kw">super</span>(<span class="code-str">"Patient non trouvé : "</span> + message);
+    }
+}
+
+<span class="code-comment">// 2. Handler global qui intercepte TOUTES les exceptions</span>
+<span class="code-annotation">@RestControllerAdvice</span>   <span class="code-comment">← Intercepte les exceptions de TOUS les controllers</span>
+<span class="code-kw">public class</span> <span class="code-class">GlobalExceptionHandler</span> {
+
+    <span class="code-annotation">@ExceptionHandler</span>(PatientNotFoundException.<span class="code-kw">class</span>)
+    <span class="code-kw">public</span> ResponseEntity&lt;ErrorResponse&gt; handleNotFound(PatientNotFoundException ex) {
+        <span class="code-kw">return</span> ResponseEntity
+                .<span class="code-method">status</span>(HttpStatus.NOT_FOUND)
+                .<span class="code-method">body</span>(<span class="code-kw">new</span> ErrorResponse(404, ex.getMessage()));
+    }
+
+    <span class="code-annotation">@ExceptionHandler</span>(MethodArgumentNotValidException.<span class="code-kw">class</span>) <span class="code-comment">← validation @Valid</span>
+    <span class="code-kw">public</span> ResponseEntity&lt;ErrorResponse&gt; handleValidation(MethodArgumentNotValidException ex) {
+        String errors = ex.getBindingResult().getFieldErrors().stream()
+                .<span class="code-method">map</span>(e -&gt; e.<span class="code-method">getField</span>() + <span class="code-str">": "</span> + e.<span class="code-method">getDefaultMessage</span>())
+                .<span class="code-method">collect</span>(Collectors.joining(<span class="code-str">" | "</span>));
+        <span class="code-kw">return</span> ResponseEntity.<span class="code-method">status</span>(HttpStatus.BAD_REQUEST).<span class="code-method">body</span>(<span class="code-kw">new</span> ErrorResponse(400, errors));
+    }
+
+    <span class="code-annotation">@ExceptionHandler</span>(Exception.<span class="code-kw">class</span>)  <span class="code-comment">← Catch-all pour le reste</span>
+    <span class="code-kw">public</span> ResponseEntity&lt;ErrorResponse&gt; handleGeneral(Exception ex) {
+        <span class="code-kw">return</span> ResponseEntity.<span class="code-method">status</span>(HttpStatus.INTERNAL_SERVER_ERROR)
+                .<span class="code-method">body</span>(<span class="code-kw">new</span> ErrorResponse(500, <span class="code-str">"Erreur interne: "</span> + ex.getMessage()));
+    }
+}
+
+<span class="code-comment">// 3. Structure de la réponse d'erreur</span>
+<span class="code-kw">public class</span> <span class="code-class">ErrorResponse</span> {
+    <span class="code-kw">private</span> LocalDateTime timestamp;
+    <span class="code-kw">private int</span> status;
+    <span class="code-kw">private</span> String message;
+
+    <span class="code-kw">public</span> ErrorResponse(<span class="code-kw">int</span> status, String message) {
+        <span class="code-kw">this</span>.timestamp = LocalDateTime.now();
+        <span class="code-kw">this</span>.status = status;
+        <span class="code-kw">this</span>.message = message;
+    }
+    <span class="code-comment">// Getters...</span>
+}</div>
+
+    <div class="callout-box">
+      <h3>💡 @RestControllerAdvice vs @ControllerAdvice ?</h3>
+      <p><code>@RestControllerAdvice</code> = <code>@ControllerAdvice</code> + <code>@ResponseBody</code></p>
+      <p>Les méthodes retournent directement du JSON (pas de vue HTML).</p>
+    </div>
+
+    <div class="json-example">
+      <h3>Exemple de réponse d'erreur 404 :</h3>
+      <div class="code-block">
+{
+  <span class="code-str">"timestamp"</span>: <span class="code-val">"2024-02-27T15:30:00"</span>,
+  <span class="code-str">"status"</span>: <span class="code-num">404</span>,
+  <span class="code-str">"message"</span>: <span class="code-val">"Patient non trouvé avec l'id : 999"</span>
+}</div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ SWAGGER ═══════════════ -->
+  <section id="swagger" class="page">
+    <div class="page-header">
+      <h1>📖 Swagger / OpenAPI — SwaggerConfig.java</h1>
+      <p>La documentation automatique et interactive de l'API.</p>
+    </div>
+
+    <div class="code-block full">
+<span class="code-annotation">@Configuration</span>         <span class="code-comment">← Classe de configuration Spring</span>
+<span class="code-kw">public class</span> <span class="code-class">SwaggerConfig</span> {
+
+    <span class="code-annotation">@Bean</span>              <span class="code-comment">← Crée un bean Spring géré par le conteneur</span>
+    <span class="code-kw">public</span> OpenAPI <span class="code-method">clinicOpenAPI</span>() {
+        <span class="code-kw">return new</span> OpenAPI()
+                .<span class="code-method">info</span>(<span class="code-kw">new</span> Info()
+                        .<span class="code-method">title</span>(<span class="code-str">"Clinic API - Gestion des Patients"</span>)
+                        .<span class="code-method">description</span>(<span class="code-str">"Microservice Spring Boot FSBM - Université Hassan II"</span>)
+                        .<span class="code-method">version</span>(<span class="code-str">"1.0.0"</span>)
+                        .<span class="code-method">contact</span>(<span class="code-kw">new</span> Contact()
+                                .<span class="code-method">name</span>(<span class="code-str">"Equipe Clinique"</span>)
+                                .<span class="code-method">email</span>(<span class="code-str">"clinique@fsbm.ma"</span>)));
+    }
+}</div>
+
+    <div class="swagger-explain">
+      <div class="explain-card">
+        <h3>🌐 URLs Swagger disponibles</h3>
+        <ul>
+          <li><code>localhost:8080/swagger-ui.html</code> → Interface visuelle interactive</li>
+          <li><code>localhost:8080/api-docs</code> → JSON OpenAPI brut</li>
+          <li><code>localhost:8080/h2-console</code> → Interface BDD H2</li>
+        </ul>
+      </div>
+      <div class="explain-card">
+        <h3>🏷️ Annotations Swagger dans le code</h3>
+        <ul>
+          <li><code>@Tag</code> → Groupe d'endpoints dans Swagger UI</li>
+          <li><code>@Operation</code> → Description d'un endpoint</li>
+          <li><code>@ApiResponse</code> → Code de réponse possible</li>
+          <li><code>@Parameter</code> → Description d'un paramètre</li>
+          <li><code>@Schema</code> → Description d'un champ d'objet</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ ANNOTATIONS ═══════════════ -->
+  <section id="annotations" class="page">
+    <div class="page-header">
+      <h1>🏷️ Toutes les annotations expliquées</h1>
+      <p>Chaque annotation, son rôle, et quand l'utiliser.</p>
+    </div>
+
+    <div class="ann-filter">
+      <button class="ann-btn active" onclick="filterAnnotations('all', this)">Toutes</button>
+      <button class="ann-btn" onclick="filterAnnotations('core', this)">Core Spring</button>
+      <button class="ann-btn" onclick="filterAnnotations('jpa', this)">JPA/Entity</button>
+      <button class="ann-btn" onclick="filterAnnotations('web', this)">Web/REST</button>
+      <button class="ann-btn" onclick="filterAnnotations('validation', this)">Validation</button>
+    </div>
+
+    <div class="annotations-grid" id="annotationsGrid">
+
+      <div class="ann-card" data-cat="core">
+        <div class="ann-name">@SpringBootApplication</div>
+        <div class="ann-layer core">Core</div>
+        <p><strong>Quoi :</strong> Méta-annotation = @Configuration + @EnableAutoConfiguration + @ComponentScan</p>
+        <p><strong>Où :</strong> Classe principale uniquement</p>
+        <p><strong>Pourquoi :</strong> Active toute la magie Spring Boot en une seule annotation</p>
+        <div class="ann-example">ClinicApiApplication.java</div>
+      </div>
+
+      <div class="ann-card" data-cat="web">
+        <div class="ann-name">@RestController</div>
+        <div class="ann-layer web">Web</div>
+        <p><strong>Quoi :</strong> = @Controller + @ResponseBody</p>
+        <p><strong>@Controller :</strong> Marque la classe comme contrôleur MVC</p>
+        <p><strong>@ResponseBody :</strong> Sérialise automatiquement le retour en JSON</p>
+        <div class="ann-example">PatientController.java</div>
+      </div>
+
+      <div class="ann-card" data-cat="core">
+        <div class="ann-name">@Service</div>
+        <div class="ann-layer core">Core</div>
+        <p><strong>Quoi :</strong> Marque la classe comme service (couche métier)</p>
+        <p><strong>Extends :</strong> @Component (donc Spring crée un bean)</p>
+        <p><strong>Sémantique :</strong> Communique l'intention = "c'est de la logique métier"</p>
+        <div class="ann-example">PatientService.java</div>
+      </div>
+
+      <div class="ann-card" data-cat="core">
+        <div class="ann-name">@Repository</div>
+        <div class="ann-layer core">Core</div>
+        <p><strong>Quoi :</strong> Marque la classe comme couche d'accès aux données</p>
+        <p><strong>Bonus :</strong> Traduit les exceptions SQL en exceptions Spring</p>
+        <p><strong>Extends :</strong> @Component</p>
+        <div class="ann-example">PatientRepository.java</div>
+      </div>
+
+      <div class="ann-card" data-cat="core">
+        <div class="ann-name">@Autowired</div>
+        <div class="ann-layer core">Core</div>
+        <p><strong>Quoi :</strong> Spring injecte automatiquement la dépendance</p>
+        <p><strong>Où :</strong> Champ, constructeur, setter</p>
+        <p><strong>Conseil :</strong> Préférer l'injection par constructeur (sans @Autowired explicite)</p>
+        <div class="ann-example">Tests : @Autowired PatientService</div>
+      </div>
+
+      <div class="ann-card" data-cat="core">
+        <div class="ann-name">@Component</div>
+        <div class="ann-layer core">Core</div>
+        <p><strong>Quoi :</strong> Bean Spring générique (détecté par @ComponentScan)</p>
+        <p><strong>Hiérarchie :</strong> @Service, @Repository, @Controller héritent de @Component</p>
+        <p><strong>Quand :</strong> Pour des classes utilitaires qui ne rentrent pas dans les autres catégories</p>
+        <div class="ann-example">Cas général (non utilisé directement dans ce projet)</div>
+      </div>
+
+      <div class="ann-card" data-cat="core">
+        <div class="ann-name">@Configuration</div>
+        <div class="ann-layer core">Core</div>
+        <p><strong>Quoi :</strong> Marque une classe comme source de configuration Spring (contient des @Bean)</p>
+        <p><strong>Traitement :</strong> Spring la traite spécialement (CGLIB proxy) pour garantir le singleton des beans</p>
+        <div class="ann-example">SwaggerConfig.java</div>
+      </div>
+
+      <div class="ann-card" data-cat="core">
+        <div class="ann-name">@Bean</div>
+        <div class="ann-layer core">Core</div>
+        <p><strong>Quoi :</strong> Le retour de la méthode devient un bean géré par Spring</p>
+        <p><strong>Où :</strong> Dans une classe @Configuration</p>
+        <p><strong>Quand :</strong> Pour des objets tiers (bibliothèques externes) que tu veux gérer avec Spring</p>
+        <div class="ann-example">SwaggerConfig → OpenAPI bean</div>
+      </div>
+
+      <div class="ann-card" data-cat="jpa">
+        <div class="ann-name">@Entity</div>
+        <div class="ann-layer jpa">JPA</div>
+        <p><strong>Quoi :</strong> Dit à JPA que cette classe représente une table en BDD</p>
+        <p><strong>Requis :</strong> @Id obligatoire sur une classe @Entity</p>
+        <p><strong>Hibernate :</strong> Scanne les @Entity au démarrage et configure le mapping</p>
+        <div class="ann-example">Patient.java</div>
+      </div>
+
+      <div class="ann-card" data-cat="jpa">
+        <div class="ann-name">@Table</div>
+        <div class="ann-layer jpa">JPA</div>
+        <p><strong>Quoi :</strong> Spécifie le nom exact de la table SQL</p>
+        <p><strong>Optionnel :</strong> Sans @Table, JPA utilise le nom de la classe</p>
+        <p><strong>Attributs :</strong> name, schema, catalog, uniqueConstraints</p>
+        <div class="ann-example">@Table(name = "PATIENT")</div>
+      </div>
+
+      <div class="ann-card" data-cat="jpa">
+        <div class="ann-name">@Id</div>
+        <div class="ann-layer jpa">JPA</div>
+        <p><strong>Quoi :</strong> Marque le champ comme clé primaire de la table</p>
+        <p><strong>Obligatoire :</strong> Toute @Entity doit avoir un @Id</p>
+        <p><strong>Type :</strong> Long, Integer, String, UUID, etc.</p>
+        <div class="ann-example">private Long id;</div>
+      </div>
+
+      <div class="ann-card" data-cat="jpa">
+        <div class="ann-name">@GeneratedValue</div>
+        <div class="ann-layer jpa">JPA</div>
+        <p><strong>Quoi :</strong> Génération automatique de la valeur de l'ID</p>
+        <p><strong>IDENTITY :</strong> BDD génère (AUTO_INCREMENT MySQL/H2)</p>
+        <p><strong>SEQUENCE :</strong> Séquence SQL (PostgreSQL)</p>
+        <p><strong>AUTO :</strong> JPA choisit selon le SGBD</p>
+        <div class="ann-example">@GeneratedValue(strategy = GenerationType.IDENTITY)</div>
+      </div>
+
+      <div class="ann-card" data-cat="jpa">
+        <div class="ann-name">@Column</div>
+        <div class="ann-layer jpa">JPA</div>
+        <p><strong>Quoi :</strong> Personnalise le mapping d'une colonne</p>
+        <p><strong>Attributs :</strong> name, nullable, unique, length, updatable…</p>
+        <p><strong>Non utilisé ici :</strong> Le projet utilise les contraintes directement en SQL (schema.sql)</p>
+        <div class="ann-example">@Column(name="NUM_SECU", unique=true)</div>
+      </div>
+
+      <div class="ann-card" data-cat="web">
+        <div class="ann-name">@RequestMapping</div>
+        <div class="ann-layer web">Web</div>
+        <p><strong>Quoi :</strong> Mappe des requêtes HTTP à une classe ou méthode</p>
+        <p><strong>Sur classe :</strong> Préfixe commun à tous les endpoints du contrôleur</p>
+        <p><strong>Sur méthode :</strong> Endpoint spécifique (mais on préfère @GetMapping, @PostMapping…)</p>
+        <div class="ann-example">@RequestMapping("/api/patients")</div>
+      </div>
+
+      <div class="ann-card" data-cat="web">
+        <div class="ann-name">@GetMapping / @PostMapping / @PutMapping / @DeleteMapping</div>
+        <div class="ann-layer web">Web</div>
+        <p><strong>Quoi :</strong> Raccourcis pour @RequestMapping(method=RequestMethod.GET/POST/PUT/DELETE)</p>
+        <p><strong>GET :</strong> Lire des données (idempotent, sans effets de bord)</p>
+        <p><strong>POST :</strong> Créer une ressource</p>
+        <p><strong>PUT :</strong> Modifier complètement une ressource</p>
+        <p><strong>DELETE :</strong> Supprimer une ressource</p>
+        <div class="ann-example">@GetMapping("/{id}") → GET /api/patients/5</div>
+      </div>
+
+      <div class="ann-card" data-cat="web">
+        <div class="ann-name">@RequestBody</div>
+        <div class="ann-layer web">Web</div>
+        <p><strong>Quoi :</strong> Lit le corps de la requête HTTP et le convertit en objet Java (JSON → Java)</p>
+        <p><strong>Combiné avec @Valid :</strong> Valide l'objet après désérialisation</p>
+        <p><strong>Qui convertit ?</strong> Jackson (ObjectMapper) fait la conversion JSON ↔ Java</p>
+        <div class="ann-example">create(@Valid @RequestBody Patient patient)</div>
+      </div>
+
+      <div class="ann-card" data-cat="web">
+        <div class="ann-name">@PathVariable</div>
+        <div class="ann-layer web">Web</div>
+        <p><strong>Quoi :</strong> Extrait une valeur depuis le chemin de l'URL</p>
+        <p><strong>Syntaxe URL :</strong> <code>/api/patients/{id}</code></p>
+        <p><strong>Exemple :</strong> GET /api/patients/5 → id = 5</p>
+        <div class="ann-example">getById(@PathVariable Long id)</div>
+      </div>
+
+      <div class="ann-card" data-cat="web">
+        <div class="ann-name">@RequestParam</div>
+        <div class="ann-layer web">Web</div>
+        <p><strong>Quoi :</strong> Extrait un paramètre de la query string (après le ?)</p>
+        <p><strong>Exemple :</strong> GET /search/nom?nom=Dup → nom = "Dup"</p>
+        <p><strong>Options :</strong> required=false (optionnel), defaultValue="…"</p>
+        <div class="ann-example">searchByNom(@RequestParam String nom)</div>
+      </div>
+
+      <div class="ann-card" data-cat="validation">
+        <div class="ann-name">@Valid</div>
+        <div class="ann-layer validation">Validation</div>
+        <p><strong>Quoi :</strong> Déclenche la validation Bean Validation sur l'objet</p>
+        <p><strong>Combiné avec :</strong> @NotBlank, @Size, @Pattern dans l'entité</p>
+        <p><strong>Erreur :</strong> Si validation échoue → MethodArgumentNotValidException → 400</p>
+        <div class="ann-example">create(@Valid @RequestBody Patient patient)</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════ FLOW ═══════════════ -->
+  <section id="flow" class="page">
+    <div class="page-header">
+      <h1>🔄 Flux complet d'une requête</h1>
+      <p>Trace le chemin d'une requête HTTP de bout en bout.</p>
+    </div>
+
+    <div class="flow-selector">
+      <button class="flow-btn active" onclick="showFlow('get', this)">GET (Lire)</button>
+      <button class="flow-btn" onclick="showFlow('post', this)">POST (Créer)</button>
+      <button class="flow-btn" onclick="showFlow('put', this)">PUT (Modifier)</button>
+      <button class="flow-btn" onclick="showFlow('delete', this)">DELETE (Supprimer)</button>
+      <button class="flow-btn" onclick="showFlow('error', this)">Erreur 404</button>
+    </div>
+
+    <div class="flow-display" id="flowDisplay">
+      <div id="flow-get" class="flow-content active">
+        <h3>GET /api/patients/1 — Récupérer un patient</h3>
+        <div class="flow-steps">
+          <div class="flow-step client">
+            <div class="step-icon">👤</div>
+            <div class="step-info"><strong>Client (Postman/Browser)</strong><br/>Envoie : GET /api/patients/1</div>
+          </div>
+          <div class="flow-connector">HTTP Request</div>
+          <div class="flow-step controller">
+            <div class="step-icon">🎮</div>
+            <div class="step-info"><strong>PatientController</strong><br/>@GetMapping("/{id}")<br/>Reçoit : id=1<br/>Appelle : service.getPatientById(1)</div>
+          </div>
+          <div class="flow-connector">Java call</div>
+          <div class="flow-step service">
+            <div class="step-icon">⚡</div>
+            <div class="step-info"><strong>PatientService</strong><br/>Appelle : repository.findById(1)<br/>Si absent → lance PatientNotFoundException</div>
+          </div>
+          <div class="flow-connector">JPA call</div>
+          <div class="flow-step dao">
+            <div class="step-icon">💾</div>
+            <div class="step-info"><strong>PatientRepository</strong><br/>Hibernate traduit en SQL<br/>SELECT * FROM PATIENT WHERE ID=1</div>
+          </div>
+          <div class="flow-connector">SQL query</div>
+          <div class="flow-step db">
+            <div class="step-icon">🛢️</div>
+            <div class="step-info"><strong>H2 Database</strong><br/>Retourne la ligne<br/>(1, 'Dupont', 'Jean', ...)</div>
+          </div>
+          <div class="flow-connector back">SQL result ↑</div>
+          <div class="flow-step dao back-step">
+            <div class="step-icon">💾</div>
+            <div class="step-info"><strong>Retour DAO</strong><br/>Hibernate convertit la ligne → objet Patient Java</div>
+          </div>
+          <div class="flow-connector back">Object Patient ↑</div>
+          <div class="flow-step service back-step">
+            <div class="step-icon">⚡</div>
+            <div class="step-info"><strong>Retour Service</strong><br/>Retourne l'objet Patient au Controller</div>
+          </div>
+          <div class="flow-connector back">ResponseEntity ↑</div>
+          <div class="flow-step controller back-step">
+            <div class="step-icon">🎮</div>
+            <div class="step-info"><strong>Retour Controller</strong><br/>Jackson sérialise Patient → JSON<br/>Retourne ResponseEntity.ok(patient)</div>
+          </div>
+          <div class="flow-connector back">HTTP 200 + JSON ↑</div>
+          <div class="flow-step client back-step">
+            <div class="step-icon">👤</div>
+            <div class="step-info"><strong>Client reçoit</strong><br/>HTTP 200 OK<br/>{"id":1,"nom":"Dupont","prenom":"Jean","numeroSecu":"175126012345699"}</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="flow-post" class="flow-content">
+        <h3>POST /api/patients — Créer un patient</h3>
+        <div class="flow-steps">
+          <div class="flow-step client">
+            <div class="step-icon">👤</div>
+            <div class="step-info"><strong>Client envoie</strong><br/>POST /api/patients<br/>Body: {"nom":"Ali","prenom":"Hassan","numeroSecu":"123456789012345"}</div>
+          </div>
+          <div class="flow-connector">HTTP POST + JSON body</div>
+          <div class="flow-step controller">
+            <div class="step-icon">🎮</div>
+            <div class="step-info"><strong>PatientController</strong><br/>@PostMapping<br/>Jackson désérialise JSON → objet Patient<br/>@Valid déclenche la validation</div>
+          </div>
+          <div class="flow-connector">✅ Validation OK → Java call</div>
+          <div class="flow-step service">
+            <div class="step-icon">⚡</div>
+            <div class="step-info"><strong>PatientService.createPatient()</strong><br/>Appelle : repository.save(patient)</div>
+          </div>
+          <div class="flow-connector">JPA save()</div>
+          <div class="flow-step dao">
+            <div class="step-icon">💾</div>
+            <div class="step-info"><strong>PatientRepository</strong><br/>Hibernate génère :<br/>INSERT INTO PATIENT (NOM, PRENOM, ...) VALUES ('Ali', 'Hassan', ...)</div>
+          </div>
+          <div class="flow-connector">SQL INSERT + id retourné ↑</div>
+          <div class="flow-step controller back-step">
+            <div class="step-icon">🎮</div>
+            <div class="step-info"><strong>Controller retourne</strong><br/>ResponseEntity.status(201 CREATED).body(createdPatient)</div>
+          </div>
+          <div class="flow-connector back">HTTP 201 + JSON ↑</div>
+          <div class="flow-step client back-step">
+            <div class="step-icon">👤</div>
+            <div class="step-info"><strong>Client reçoit</strong><br/>HTTP 201 CREATED<br/>{"id":6,"nom":"Ali","prenom":"Hassan",...}</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="flow-put" class="flow-content">
+        <h3>PUT /api/patients/1 — Modifier un patient</h3>
+        <div class="flow-steps">
+          <div class="flow-step client">
+            <div class="step-icon">👤</div>
+            <div class="step-info"><strong>Client envoie</strong><br/>PUT /api/patients/1<br/>Body: {"nom":"Dupont-Modifié","prenom":"Jean",...}</div>
+          </div>
+          <div class="flow-connector">HTTP PUT + JSON body</div>
+          <div class="flow-step controller">
+            <div class="step-icon">🎮</div>
+            <div class="step-info"><strong>PatientController</strong><br/>Reçoit id=1 (@PathVariable) + Patient (@RequestBody)<br/>@Valid valide le body</div>
+          </div>
+          <div class="flow-connector">Java call updatePatient(1, patient)</div>
+          <div class="flow-step service">
+            <div class="step-icon">⚡</div>
+            <div class="step-info"><strong>PatientService.updatePatient()</strong><br/>1. getPatientById(1) → vérifie existence<br/>2. Modifie les champs de l'objet existant<br/>3. repository.save(existing)</div>
+          </div>
+          <div class="flow-connector">JPA save() → UPDATE SQL</div>
+          <div class="flow-step client back-step">
+            <div class="step-icon">👤</div>
+            <div class="step-info"><strong>Client reçoit</strong><br/>HTTP 200 OK<br/>Patient mis à jour en JSON</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="flow-delete" class="flow-content">
+        <h3>DELETE /api/patients/1 — Supprimer un patient</h3>
+        <div class="flow-steps">
+          <div class="flow-step client">
+            <div class="step-icon">👤</div>
+            <div class="step-info"><strong>Client envoie</strong><br/>DELETE /api/patients/1</div>
+          </div>
+          <div class="flow-connector">HTTP DELETE</div>
+          <div class="flow-step service">
+            <div class="step-icon">⚡</div>
+            <div class="step-info"><strong>PatientService.deletePatient()</strong><br/>1. getPatientById(1) → vérifie existence (404 si absent)<br/>2. repository.deleteById(1)</div>
+          </div>
+          <div class="flow-connector">DELETE FROM PATIENT WHERE ID=1</div>
+          <div class="flow-step client back-step">
+            <div class="step-icon">👤</div>
+            <div class="step-info"><strong>Client reçoit</strong><br/>HTTP 204 NO CONTENT<br/>(pas de body = suppression réussie)</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="flow-error" class="flow-content">
+        <h3>GET /api/patients/999 — Patient introuvable (404)</h3>
+        <div class="flow-steps">
+          <div class="flow-step client">
+            <div class="step-icon">👤</div>
+            <div class="step-info"><strong>Client</strong><br/>GET /api/patients/999 (n'existe pas)</div>
+          </div>
+          <div class="flow-connector">HTTP GET</div>
+          <div class="flow-step service">
+            <div class="step-icon">⚡</div>
+            <div class="step-info"><strong>PatientService</strong><br/>findById(999) → Optional.empty()<br/>orElseThrow() lance PatientNotFoundException</div>
+          </div>
+          <div class="flow-connector error-conn">❌ Exception lancée !</div>
+          <div class="flow-step exception">
+            <div class="step-icon">🚨</div>
+            <div class="step-info"><strong>GlobalExceptionHandler</strong><br/>@ExceptionHandler(PatientNotFoundException.class)<br/>Crée ErrorResponse(404, "Patient non trouvé avec l'id : 999")</div>
+          </div>
+          <div class="flow-connector back">HTTP 404 ↑</div>
+          <div class="flow-step client back-step">
+            <div class="step-icon">👤</div>
+            <div class="step-info"><strong>Client reçoit</strong><br/>HTTP 404 NOT FOUND<br/>{"timestamp":"...","status":404,"message":"Patient non trouvé avec l'id : 999"}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ DATABASE ═══════════════ -->
+  <section id="database" class="page">
+    <div class="page-header">
+      <h1>🛢️ Base de données — H2, schema.sql, data.sql</h1>
+      <p>Comment la persistance des données est configurée.</p>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3>schema.sql — Création de la table</h3>
+        <div class="code-block full">
+<span class="code-comment">-- Supprime si elle existe (évite les erreurs au redémarrage)</span>
+DROP TABLE IF EXISTS PATIENT;
+
+CREATE TABLE PATIENT (
+    id                      BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nom                     VARCHAR(100) NOT NULL,
+    prenom                  VARCHAR(100) NOT NULL,
+    numero_secu             VARCHAR(15)  NOT NULL UNIQUE,
+    diagnostic_confidentiel VARCHAR(500)
+);</div>
+        <div class="callout">⚠️ <code>ddl-auto=none</code> → Hibernate ne touche pas au schéma. Spring Boot exécute ce fichier SQL à chaque démarrage.</div>
+      </div>
+      <div>
+        <h3>data.sql — Données initiales</h3>
+        <div class="code-block full">
+INSERT INTO PATIENT (nom, prenom, numero_secu, diagnostic_confidentiel)
+VALUES
+('Dupont',  'Jean',   '175126012345699', 'Diabète de type 2'),
+('Martin',  'Marie',  '285034065432100', 'Hypertension'),
+('Bernard', 'Pierre', '359128078901200', 'Asthme chronique'),
+('Dubois',  'Sophie', '467215034567800', 'Migraine chronique'),
+('Thomas',  'Luc',    '578302090123400', 'Allergie arachides');</div>
+        <div class="callout">Ce fichier est exécuté après schema.sql. 5 patients pré-chargés pour les tests.</div>
+      </div>
+    </div>
+
+    <div class="h2-explain">
+      <h3>🔬 H2 en mémoire — Avantages et limites</h3>
+      <div class="compare-grid">
+        <div class="compare-good">
+          <h4>✅ Avantages</h4>
+          <ul>
+            <li>Aucune installation nécessaire</li>
+            <li>Ultra rapide (mémoire RAM)</li>
+            <li>Parfait pour les tests et le dev</li>
+            <li>Réinitialisation automatique au redémarrage</li>
+            <li>Console web intégrée</li>
+          </ul>
+        </div>
+        <div class="compare-bad">
+          <h4>❌ Limites</h4>
+          <ul>
+            <li>Données perdues à l'arrêt</li>
+            <li>Ne convient pas à la production</li>
+            <li>Pour prod : MySQL, PostgreSQL, Oracle…</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ TESTS ═══════════════ -->
+  <section id="tests" class="page">
+    <div class="page-header">
+      <h1>🧪 Tests — ClinicApiApplicationTests.java</h1>
+      <p>Vérifier que le code fonctionne correctement de manière automatisée.</p>
+    </div>
+
+    <div class="code-block full">
+<span class="code-annotation">@SpringBootTest</span>    <span class="code-comment">← Lance le contexte Spring complet pour les tests</span>
+<span class="code-kw">class</span> <span class="code-class">ClinicApiApplicationTests</span> {
+
+    <span class="code-annotation">@Autowired</span>
+    <span class="code-kw">private</span> PatientService patientService;
+
+    <span class="code-annotation">@Autowired</span>
+    <span class="code-kw">private</span> PatientRepository patientRepository;
+
+    <span class="code-annotation">@Test</span>
+    <span class="code-kw">void</span> <span class="code-method">contextLoads</span>() {
+        assertNotNull(patientService);  <span class="code-comment">← Le contexte Spring doit se charger</span>
+    }
+
+    <span class="code-annotation">@Test</span>
+    <span class="code-kw">void</span> <span class="code-method">testGetAllPatientsReturnsFivePatients</span>() {
+        List&lt;Patient&gt; patients = patientService.<span class="code-method">getAllPatients</span>();
+        assertEquals(5, patients.size());  <span class="code-comment">← data.sql charge 5 patients</span>
+    }
+
+    <span class="code-annotation">@Test</span>
+    <span class="code-kw">void</span> <span class="code-method">testGetPatientByIdNotFound</span>() {
+        assertThrows(PatientNotFoundException.<span class="code-kw">class</span>,
+            () -&gt; patientService.<span class="code-method">getPatientById</span>(9999L)); <span class="code-comment">← Doit lancer l'exception</span>
+    }
+
+    <span class="code-annotation">@Test</span>
+    <span class="code-kw">void</span> <span class="code-method">testDiagnosticConfidentielIsNotNull</span>() {
+        Patient p = patientRepository.<span class="code-method">findById</span>(1L).<span class="code-method">orElseThrow</span>();
+        assertNotNull(p.<span class="code-method">getDiagnosticConfidentiel</span>());
+        <span class="code-comment">← Prouve que @JsonIgnore masque dans l'API mais pas en BDD !</span>
+    }
+}</div>
+
+    <div class="tests-explain">
+      <div class="explain-card">
+        <h3>@SpringBootTest</h3>
+        <p>Charge le contexte Spring complet pour le test. Plus lent mais plus réaliste. Pour des tests unitaires rapides, utiliser @WebMvcTest ou Mockito.</p>
+      </div>
+      <div class="explain-card">
+        <h3>Les méthodes d'assertion (JUnit 5)</h3>
+        <ul>
+          <li><code>assertEquals(expected, actual)</code> → valeurs égales</li>
+          <li><code>assertNotNull(obj)</code> → pas null</li>
+          <li><code>assertThrows(Exception.class, lambda)</code> → exception lancée</li>
+          <li><code>assertTrue(condition)</code> → condition vraie</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ QUIZ ═══════════════ -->
+  <section id="quiz" class="page">
+    <div class="page-header">
+      <h1>📝 Quiz — Examen oral simulé</h1>
+      <p>Questions de niveau FSBM · Réponses et explications incluses.</p>
+    </div>
+
+    <div class="quiz-score-bar">
+      <span id="quizProgress">0 / 20 répondues</span>
+      <div class="score-display">Score : <strong id="scoreDisplay">0</strong> / <span id="totalDisplay">0</span></div>
+    </div>
+
+    <div id="quizContainer" class="quiz-container">
+      <!-- Dynamically generated by script.js -->
+    </div>
+
+    <div class="quiz-controls">
+      <button class="btn-primary" onclick="submitQuiz()">Voir mes résultats</button>
+      <button class="btn-secondary" onclick="resetQuiz()">Recommencer</button>
+    </div>
+
+    <div id="quizResults" class="quiz-results" style="display:none"></div>
+  </section>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
