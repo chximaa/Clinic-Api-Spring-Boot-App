@@ -1,1 +1,2 @@
-The website provided explains the whole project structure and its contents
+The website provided explains the whole project structure and its contents.
+You will also find the presentation and rapport of the project.
